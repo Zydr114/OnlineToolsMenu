@@ -15,12 +15,12 @@ test("production entry has no broken local assets or browser errors", async ({
   });
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    /小工具，\s*大有\s*可为\s*。/,
+    /工具箱\s*\./,
   );
   await page.evaluate(() => document.fonts.ready);
   expect(
     await page.evaluate(() =>
-      document.fonts.check('600 16px "Workshop Sans"', "小工具大有可为"),
+      document.fonts.check('600 16px "Interface Sans"', "工具箱歌词编辑"),
     ),
   ).toBe(true);
   await expect(page.locator(".launch-button")).toHaveAttribute(
@@ -96,10 +96,10 @@ test("dialogs restore focus and close using Escape and backdrop", async ({
   page,
 }) => {
   await page.goto("/");
-  const trigger = page.getByRole("button", { name: "关于这里" });
+  const trigger = page.getByRole("button", { name: "关于" });
   await trigger.click();
   await expect(
-    page.getByRole("dialog", { name: /一些小工具，\s*一点创造力。/ }),
+    page.getByRole("dialog", { name: "Talium", exact: true }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();
@@ -121,13 +121,21 @@ test("reduced motion is respected, can be toggled, and persists", async ({
   await page.goto("/");
   const motion = page.getByRole("button", { name: "动效已关闭" });
   await expect(motion).toHaveAttribute("aria-pressed", "false");
-  expect(
-    await page
-      .locator(".bloom")
-      .evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe("none");
-  await page.getByRole("button", { name: "绽放灵感花朵" }).click();
-  await expect(page.locator(".toast")).toHaveText("灵感，在这里生长。");
+  await expect(page.locator(".geometry-canvas")).toHaveAttribute(
+    "data-animating",
+    "false",
+  );
+  const before = await page
+    .locator(".geometry-canvas")
+    .evaluate((el: HTMLCanvasElement) => el.toDataURL());
+  await page.getByRole("button", { name: "变换几何结构" }).click();
+  await expect(
+    page.getByRole("button", { name: "变换几何结构" }),
+  ).toHaveAttribute("aria-pressed", "true");
+  const after = await page
+    .locator(".geometry-canvas")
+    .evaluate((el: HTMLCanvasElement) => el.toDataURL());
+  expect(after).not.toBe(before);
   await motion.click();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "on");
   await page.reload();
@@ -203,7 +211,7 @@ for (const theme of ["light", "dark"] as const) {
       .click();
     expect((await scan()).violations).toEqual([]);
     await page.keyboard.press("Escape");
-    await page.getByRole("button", { name: "关于这里" }).click();
+    await page.getByRole("button", { name: "关于" }).click();
     expect((await scan()).violations).toEqual([]);
   });
 }
@@ -215,7 +223,61 @@ test("primary navigation remains useful with JavaScript disabled", async ({
   const page = await context.newPage();
   await page.goto(process.env.TEST_BASE_URL || "http://127.0.0.1:4173");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page.getByRole("link", { name: "探索工具" }).press("Enter");
+  await page.getByRole("link", { name: "查看工具" }).press("Enter");
   await expect(page.locator(".launch-button")).toBeVisible();
   await context.close();
+});
+
+test("geometry renders monochrome pixels and pauses when offscreen", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 420 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  const canvas = page.locator(".geometry-canvas");
+  await expect(canvas).toHaveAttribute("data-animating", "true");
+  const monochrome = await canvas.evaluate((element: HTMLCanvasElement) => {
+    const pixels = element
+      .getContext("2d")!
+      .getImageData(0, 0, element.width, element.height).data;
+    let rendered = 0;
+    for (let i = 0; i < pixels.length; i += 4) {
+      if (pixels[i + 3]) rendered++;
+      if (pixels[i] !== pixels[i + 1] || pixels[i] !== pixels[i + 2])
+        return false;
+    }
+    return rendered > 100;
+  });
+  expect(monochrome).toBe(true);
+  const snapshot = () =>
+    canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL());
+  const initial = await snapshot();
+  await expect.poll(snapshot).not.toBe(initial);
+  await page.locator("footer").scrollIntoViewIfNeeded();
+  await expect(canvas).toHaveAttribute("data-animating", "false");
+  const paused = await snapshot();
+  // Observe a full interval after intersection changed; paused renderers must stay idle.
+  await page.waitForTimeout(150);
+  expect(await snapshot()).toBe(paused);
+  await page.locator(".hero-art").scrollIntoViewIfNeeded();
+  await expect(canvas).toHaveAttribute("data-animating", "true");
+});
+
+test("tool card opens the application when clicking its visual area", async ({
+  page,
+}) => {
+  await page.route("https://tool.talium.site/MakoLrcStudio/", (route) =>
+    route.fulfill({
+      body: "<h1>Tool destination</h1>",
+      contentType: "text/html",
+    }),
+  );
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const card = page.locator(".launch-button");
+  const bounds = await card.boundingBox();
+  await card.click({
+    position: { x: bounds!.width * 0.72, y: bounds!.height * 0.7 },
+  });
+  await expect(page).toHaveURL("https://tool.talium.site/MakoLrcStudio/");
 });

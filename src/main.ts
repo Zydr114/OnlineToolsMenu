@@ -1,9 +1,11 @@
+import { createGeometry } from "./geometry";
+
 const root = document.documentElement;
 const $ = <T extends Element = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
 const systemTheme = matchMedia("(prefers-color-scheme: dark)");
 const systemMotion = matchMedia("(prefers-reduced-motion: reduce)");
-const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
+let geometry: ReturnType<typeof createGeometry>;
 
 function readPreference(key: string) {
   try {
@@ -39,15 +41,22 @@ function syncTheme() {
   button.setAttribute("title", label);
   $('meta[name="theme-color"]').setAttribute(
     "content",
-    dark ? "#171e19" : "#f5f5ef",
+    dark ? "#0a0a0a" : "#fafafa",
   );
+  geometry?.refresh();
 }
 function syncMotion() {
   root.dataset.motion = motionEnabled() ? "on" : "off";
   $(".motion-toggle").setAttribute("aria-pressed", String(motionEnabled()));
-  $(".motion-label").textContent = motionEnabled()
-    ? "动效已开启"
-    : "动效已关闭";
+  $(".motion-toggle").setAttribute(
+    "aria-label",
+    motionEnabled() ? "动效已开启" : "动效已关闭",
+  );
+  $(".motion-toggle").setAttribute(
+    "title",
+    motionEnabled() ? "关闭动效" : "开启动效",
+  );
+  geometry?.refresh();
 }
 syncTheme();
 syncMotion();
@@ -64,14 +73,6 @@ window.addEventListener("storage", (event) => {
   }
 });
 
-let toastTimer: ReturnType<typeof setTimeout>;
-function toast(message: string) {
-  const element = $(".toast");
-  clearTimeout(toastTimer);
-  element.textContent = message;
-  element.classList.add("show");
-  toastTimer = setTimeout(() => element.classList.remove("show"), 2400);
-}
 let themeTransition: ViewTransition | undefined;
 $(".theme-toggle").addEventListener("click", (event: MouseEvent) => {
   manualTheme = isDark() ? "light" : "dark";
@@ -114,21 +115,15 @@ $(".motion-toggle").addEventListener("click", () => {
   manualMotion = motionEnabled() ? "off" : "on";
   savePreference("talium-motion", manualMotion);
   syncMotion();
-  toast(motionEnabled() ? "让灵感，动起来。" : "慢下来，也很好。");
 });
 $("#year").textContent = String(new Date().getFullYear());
 
-// The flower and waveform are vectors: no videos, remote images or rendering dependencies.
-const petals = $(".bloom-petals");
-for (let index = 0; index < 12; index++) {
-  const petal = document.createElementNS("http://www.w3.org/2000/svg", "use");
-  petal.setAttribute("href", "#bloom-petal");
-  petal.setAttribute("transform", `rotate(${index * 30} 300 300)`);
-  petal.setAttribute("fill", "url(#petal)");
-  petal.setAttribute("stroke", "url(#petal-edge)");
-  petal.setAttribute("stroke-width", ".9");
-  petals.appendChild(petal);
-}
+const art = $(".hero-art");
+const card = $(".tool-card");
+geometry = createGeometry($(".geometry-canvas"), $(".geometry-button"), {
+  motion: motionEnabled,
+  dark: isDark,
+});
 const waveform = $(".waveform");
 for (let index = 0; index < 90; index++) {
   const bar = document.createElement("i");
@@ -141,61 +136,10 @@ for (let index = 0; index < 90; index++) {
   waveform.appendChild(bar);
 }
 document
-  .querySelectorAll<HTMLElement>(".lyric-line-current > span")
-  .forEach((word, index) =>
-    word.style.setProperty("--word-index", String(index)),
+  .querySelectorAll<HTMLElement>(".signal-segments > i")
+  .forEach((segment, index) =>
+    segment.style.setProperty("--segment-index", String(index)),
   );
-
-const bloomButton = $<HTMLButtonElement>(".bloom-button");
-let bloomTimer: ReturnType<typeof setTimeout>;
-bloomButton.addEventListener("click", () => {
-  if (!motionEnabled()) {
-    toast("灵感，在这里生长。");
-    return;
-  }
-  if (bloomButton.classList.contains("is-blooming")) return;
-  bloomButton.classList.add("is-blooming");
-  clearTimeout(bloomTimer);
-  bloomTimer = setTimeout(
-    () => bloomButton.classList.remove("is-blooming"),
-    1700,
-  );
-});
-
-const art = $(".hero-art");
-let artFrame = 0;
-art.addEventListener("pointermove", (event: PointerEvent) => {
-  if (!finePointer.matches || !motionEnabled()) return;
-  cancelAnimationFrame(artFrame);
-  artFrame = requestAnimationFrame(() => {
-    const bounds = art.getBoundingClientRect();
-    art.style.setProperty(
-      "--tilt-x",
-      `${-((event.clientY - bounds.top) / bounds.height - 0.5) * 18}deg`,
-    );
-    art.style.setProperty(
-      "--tilt-y",
-      `${((event.clientX - bounds.left) / bounds.width - 0.5) * 18}deg`,
-    );
-  });
-});
-art.addEventListener("pointerleave", () => {
-  cancelAnimationFrame(artFrame);
-  art.style.setProperty("--tilt-x", "0deg");
-  art.style.setProperty("--tilt-y", "0deg");
-});
-const card = $(".tool-card");
-let cardFrame = 0;
-card.addEventListener("pointermove", (event: PointerEvent) => {
-  if (!finePointer.matches || !motionEnabled()) return;
-  cancelAnimationFrame(cardFrame);
-  cardFrame = requestAnimationFrame(() => {
-    const bounds = card.getBoundingClientRect();
-    card.style.setProperty("--spot-x", `${event.clientX - bounds.left}px`);
-    card.style.setProperty("--spot-y", `${event.clientY - bounds.top}px`);
-  });
-});
-card.addEventListener("pointerleave", () => cancelAnimationFrame(cardFrame));
 
 const search = $<HTMLDialogElement>(".search-dialog");
 const input = $<HTMLInputElement>("#tool-search");
@@ -312,8 +256,10 @@ if ("IntersectionObserver" in window) {
   root.classList.add("js-ready");
   const animationVisibility = new IntersectionObserver(
     (entries) => {
-      for (const entry of entries)
+      for (const entry of entries) {
         entry.target.classList.toggle("offscreen", !entry.isIntersecting);
+        if (entry.target === art) geometry?.setVisible(entry.isIntersecting);
+      }
     },
     { rootMargin: "60px" },
   );

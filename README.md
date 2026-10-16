@@ -2,9 +2,10 @@
 
 **线上入口：[tool.talium.site](https://tool.talium.site/)** · [MakoLrc Studio](https://tool.talium.site/MakoLrcStudio/)
 
-一个为个人在线工具打造的菜单页。暖白、墨绿与青柠色，Material You 圆角形态，自绘渐变花形和歌词时间轴意象。
+一个为个人在线工具打造的黑白菜单页。用细网格、几何线框和信号图形呈现工具，不添加装饰性标语。
 
-- 指针视差、点击绽放、滚动入场、卡片聚光、波形与歌词同步动画。
+- 中性黑白灰阶、低圆角界面；可旋转和变形的点线面几何体、波形与扫描线。
+- 几何动画约 30fps、最高 2× 分辨率，离屏及后台暂停；整块卡片可点击。
 - 跟随系统的浅色/深色主题；支持的浏览器以圆形扩散动画切换，可保存偏好并跨标签同步。
 - `Ctrl/⌘ K` 或 `/` 搜索；关键词匹配、空结果、方向键和 Enter 导航；Esc 关闭并恢复焦点。
 - 移动端布局、语义化导航、可见键盘焦点、减少动效偏好和手动动效开关。
@@ -24,7 +25,7 @@ npm run build
 npm run preview
 ```
 
-`src/main.ts` 负责交互，`src/style.css` 负责布局与动画，`index.html` 提供可直接访问的内容。关闭 JavaScript 后，工具入口仍可使用。
+`src/main.ts` 负责交互，`src/geometry.ts` 负责几何动画，`src/style.css` 负责布局与 CSS 动画，`index.html` 提供可直接访问的内容。关闭 JavaScript 后，工具入口仍可使用。
 
 ## 验证
 
@@ -35,7 +36,7 @@ npm test
 npm run test:deploy
 ```
 
-生产构建在 Chromium、Firefox、WebKit 上检查主题持久化、键盘搜索、真实目标 URL、弹窗焦点、减少动效、存储受限模式、320/390/768/1440px 布局，以及两种主题和弹窗的 WCAG AA 自动检查。截图写入 `artifacts/screenshots/`，报告写入 `playwright-report/`。WebKit Linux 是浏览器引擎验证，不代表真实 iPhone/Safari 人工验收。
+生产构建在 Chromium、Firefox、WebKit 上检查主题持久化、键盘搜索、真实目标 URL、弹窗焦点、减少动效、存储受限模式、320/390/768/1440px 布局，几何体黑白像素、离屏暂停、整卡点击，以及两种主题和弹窗的 WCAG AA 自动检查。截图写入 `artifacts/screenshots/`，报告写入 `playwright-report/`。WebKit Linux 是浏览器引擎验证，不代表真实 iPhone/Safari 人工验收。
 
 Playwright 在不受支持的 Linux 发行版可能缺少 Ubuntu ABI 运行库。可通过 `PLAYWRIGHT_WEBKIT_EXECUTABLE` 指定独立测试启动器，不要求修改系统库；受支持的 CI 系统可使用 Playwright 官方镜像或安装对应浏览器依赖。
 
