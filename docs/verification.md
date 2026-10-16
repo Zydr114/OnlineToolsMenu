@@ -29,4 +29,28 @@ WebKit 在 CachyOS 上通过隔离启动器使用官方 Ubuntu 的 libicu74、li
 a53974e284212a9638457b72ff2adde9670c0e4ed41c59a7d12174d9033f53c2
 ```
 
-公开站点验收结果在部署完成后追加。
+## 公开站点验收
+
+- 地址：`https://tool.talium.site/`。
+- 部署源码：`fb457ef49fb0109b9f55bc898601b6fcc95dcde0`。
+- 激活时间：2026-10-16 13:12:57（Asia/Shanghai）。
+- 线上 Chromium 的全部 14 项回归通过（7.0 秒），包含两种主题、搜索、弹窗、无 JavaScript 导航、响应式和无障碍扫描。
+- 首页 200，未配置路径 404，`/MakoLrcStudio` 308，`/MakoLrcStudio/` 200。
+- 首页 JavaScript、CSS、两份字体、启动主题脚本和图标的公开响应均与本地构建逐字节一致。
+- 首页使用 `no-cache`，哈希 CSS/JS 使用一年 `immutable`；菜单安全响应头已启用。
+- 原有歌词工具入口 HTML 的 SHA-256 与部署前一致。
+- Caddy 服务状态 `active`。
+
+服务器版本目录：
+
+```text
+/var/www/tool.talium.site/menu/releases/20261016T051257187828Z-fb457ef49fb0
+```
+
+原始 Caddy 配置备份：
+
+```text
+/var/backups/talium-menu/20261016T051257187828Z.Caddyfile
+```
+
+本条验收记录提交仅更新文档；公开 `/release.json` 标识的是已验收的部署源码提交。
