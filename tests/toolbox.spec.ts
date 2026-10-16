@@ -215,7 +215,7 @@ test("primary navigation remains useful with JavaScript disabled", async ({
   const page = await context.newPage();
   await page.goto(process.env.TEST_BASE_URL || "http://127.0.0.1:4173");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page.getByRole("link", { name: "探索工具" }).click();
+  await page.getByRole("link", { name: "探索工具" }).press("Enter");
   await expect(page.locator(".launch-button")).toBeVisible();
   await context.close();
 });
