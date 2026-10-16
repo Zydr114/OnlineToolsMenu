@@ -68,3 +68,16 @@ a53974e284212a9638457b72ff2adde9670c0e4ed41c59a7d12174d9033f53c2
 - 交付构建：HTML 11.44 kB、CSS 23.01 kB、JS 8.18 kB；字体中文子集从 62.2 kB 缩至 26.1 kB。
 
 截图：`artifacts/mono-dark-1440.png`、`artifacts/mono-light-1440.png`、`artifacts/mono-dark-390.png`、`artifacts/mono-dark-square.png`。
+
+### 黑白版线上验收
+
+- 部署源码：`c2399962d3008d7e8def340a30cb4bbbd253c93c`。
+- 激活时间：2026-10-16 13:29:50（Asia/Shanghai）。
+- `https://tool.talium.site/` 返回新版标题与精简内容；生产资源与本地构建逐字节一致。
+- 线上 Chromium 的全部 16 项回归通过（4.9 秒），包括真实画布黑白像素、离屏暂停和整卡跳转。
+- 既有歌词工具 HTML 校验值不变；上一版不可变资源仍返回 200，支持切换期间的旧页面请求。
+- 上一版本：`/var/www/tool.talium.site/menu/releases/20261016T051257187828Z-fb457ef49fb0`。
+- 当前版本：`/var/www/tool.talium.site/menu/releases/20261016T052950211872Z-c2399962d300`。
+- 本次配置备份：`/var/backups/talium-menu/20261016T052950211872Z.Caddyfile`。
+
+回滚命令见 README。本条记录提交仅更新文档，不改变已验收的线上源码。
