@@ -228,7 +228,7 @@ test("primary navigation remains useful with JavaScript disabled", async ({
   await context.close();
 });
 
-test("geometry renders monochrome pixels and pauses when offscreen", async ({
+test("geometry limits color to red and blue accents and pauses when offscreen", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 420 });
@@ -236,19 +236,34 @@ test("geometry renders monochrome pixels and pauses when offscreen", async ({
   await page.goto("/");
   const canvas = page.locator(".geometry-canvas");
   await expect(canvas).toHaveAttribute("data-animating", "true");
-  const monochrome = await canvas.evaluate((element: HTMLCanvasElement) => {
+  const palette = await canvas.evaluate((element: HTMLCanvasElement) => {
     const pixels = element
       .getContext("2d")!
       .getImageData(0, 0, element.width, element.height).data;
-    let rendered = 0;
+    let rendered = 0,
+      neutral = 0,
+      red = 0,
+      blue = 0;
     for (let i = 0; i < pixels.length; i += 4) {
-      if (pixels[i + 3]) rendered++;
-      if (pixels[i] !== pixels[i + 1] || pixels[i] !== pixels[i + 2])
-        return false;
+      if (!pixels[i + 3]) continue;
+      rendered++;
+      if (
+        Math.max(pixels[i], pixels[i + 1], pixels[i + 2]) -
+          Math.min(pixels[i], pixels[i + 1], pixels[i + 2]) <
+        5
+      )
+        neutral++;
+      if (pixels[i] > pixels[i + 1] + 20 && pixels[i] > pixels[i + 2] + 20)
+        red++;
+      if (pixels[i + 2] > pixels[i + 1] + 20 && pixels[i + 2] > pixels[i] + 20)
+        blue++;
     }
-    return rendered > 100;
+    return { rendered, neutralRatio: neutral / rendered, red, blue };
   });
-  expect(monochrome).toBe(true);
+  expect(palette.rendered).toBeGreaterThan(100);
+  expect(palette.neutralRatio).toBeGreaterThan(0.85);
+  expect(palette.red).toBeGreaterThan(10);
+  expect(palette.blue).toBeGreaterThan(10);
   const snapshot = () =>
     canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL());
   const initial = await snapshot();
@@ -280,4 +295,77 @@ test("tool card opens the application when clicking its visual area", async ({
     position: { x: bounds!.width * 0.72, y: bounds!.height * 0.7 },
   });
   await expect(page).toHaveURL("https://tool.talium.site/MakoLrcStudio/");
+});
+
+test("dragging rotates the knot without switching its shape", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const control = page.getByRole("button", { name: "变换几何结构" });
+  const canvas = page.locator(".geometry-canvas");
+  await expect(control).toHaveClass(/geometry-ready/);
+  const pixels = () =>
+    canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL());
+  const initial = await pixels();
+  const box = (await control.boundingBox())!;
+  await page.mouse.move(box.x + box.width * 0.4, box.y + box.height * 0.55);
+  await page.mouse.down();
+  await page.mouse.move(
+    box.x + box.width * 0.4 + 80,
+    box.y + box.height * 0.55 - 30,
+    { steps: 12 },
+  );
+  await page.mouse.up();
+  await expect(control).toHaveAttribute("aria-pressed", "false");
+  expect(await pixels()).not.toBe(initial);
+  await expect(canvas).toHaveAttribute("data-animating", "false");
+  await control.click();
+  await expect(control).toHaveAttribute("aria-pressed", "true");
+});
+
+test("dark knot retains sparse red-blue lines and fits inside its canvas", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator(".geometry-button")).toHaveClass(/geometry-ready/);
+  for (let shape = 0; shape < 2; shape++) {
+    const palette = await page
+      .locator("canvas")
+      .evaluate((canvas: HTMLCanvasElement) => {
+        const data = canvas
+          .getContext("2d")!
+          .getImageData(0, 0, canvas.width, canvas.height).data;
+        let red = 0,
+          blue = 0,
+          neutral = 0,
+          total = 0,
+          edge = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          if (!data[i + 3]) continue;
+          total++;
+          if (data[i] > data[i + 1] + 20 && data[i] > data[i + 2] + 20) red++;
+          if (data[i + 2] > data[i + 1] + 20 && data[i + 2] > data[i] + 20)
+            blue++;
+          if (
+            Math.max(data[i], data[i + 1], data[i + 2]) -
+              Math.min(data[i], data[i + 1], data[i + 2]) <
+            5
+          )
+            neutral++;
+          const x = (i / 4) % canvas.width,
+            y = Math.floor(i / 4 / canvas.width);
+          if (x < 8 || x > canvas.width - 9 || y < 8 || y > canvas.height - 9)
+            edge++;
+        }
+        return { red, blue, neutralRatio: neutral / total, edge };
+      });
+    expect(palette.red).toBeGreaterThan(10);
+    expect(palette.blue).toBeGreaterThan(10);
+    expect(palette.neutralRatio).toBeGreaterThan(0.85);
+    expect(palette.edge).toBe(0);
+    if (!shape)
+      await page.getByRole("button", { name: "变换几何结构" }).click();
+  }
 });

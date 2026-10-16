@@ -369,6 +369,12 @@ h1 {
   height: 100%;
   display: block;
   position: relative;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+.geometry-button[data-dragging="true"] {
+  cursor: grabbing;
 }
 .geometry-button:focus-visible {
   outline-offset: -16px;

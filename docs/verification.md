@@ -81,3 +81,14 @@ a53974e284212a9638457b72ff2adde9670c0e4ed41c59a7d12174d9033f53c2
 - 本次配置备份：`/var/backups/talium-menu/20261016T052950211872Z.Caddyfile`。
 
 回滚命令见 README。本条记录提交仅更新文档，不改变已验收的线上源码。
+
+## 空间结动画升级（2026-10-16）
+
+- 首屏升级为闭合参数曲线构成的空间结，包含透视、深度遮挡、平滑结形变换、局部红蓝流线、拖动旋转和衰减惯性。
+- 生产构建通过；Chromium / Firefox / WebKit 共 54 项回归通过（26.5 秒）。
+- 真实画布像素验证红蓝强调线存在，灰阶像素占比高于 85%；两种结构均不在画布边缘裁切。
+- 验证减少动效时可直接变形和拖动静态结构、拖动不误触点击、离屏暂停与恢复。
+- Chromium 模拟 Pixel 7 触摸环境，纵向滑过几何体能滚动页面，且不会误切换结构。真实触屏设备未人工验收。
+- 手工检查 1440px 深浅主题、两种结构及 390px 深色手机截图；无 JavaScript 时提供静态结形轮廓，并复验三浏览器入口和原生导航。
+- 构建体积：HTML 13.64 kB、CSS 23.14 kB、JS 10.54 kB。
+- 截图：`artifacts/knot-final-dark-1440.png`、`artifacts/knot-final-eight-dark-1440.png`、`artifacts/knot-final-light-1440.png`、`artifacts/knot-final-dark-390.png`。
