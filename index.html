@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f5ef" />
+    <meta
+      name="description"
+      content="Talium 个人在线工具箱。一些认真打磨的小工具，让灵感自由发生。从 MakoLrc Studio 开始，在浏览器里制作逐字歌词。"
+    />
+    <meta property="og:title" content="Talium · 小工具，大有可为" />
+    <meta
+      property="og:description"
+      content="把复杂留给工具，把专注留给创作。探索 Talium 个人在线工具箱。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tool.talium.site/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href="https://tool.talium.site/" />
+    <script src="/theme.js"></script>
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>Talium · 小工具，大有可为</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#tools">跳至工具</a>
+    <svg
+      class="icon-library"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 19 19 5M5 5h14v14" />
+      </symbol>
+      <symbol id="i-down" viewBox="0 0 24 24">
+        <path d="M12 4v16m-6-6 6 6 6-6" />
+      </symbol>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.8" cy="10.8" r="6.8" />
+        <path d="m16 16 4.5 4.5" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4m0-14.2-1.4 1.4M6.3 17.7l-1.4 1.4"
+        />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 14a8.6 8.6 0 0 1-10.5-10.5A8.7 8.7 0 1 0 20.5 14Z" />
+      </symbol>
+      <symbol id="i-github" viewBox="0 0 24 24">
+        <path
+          d="M9 19c-4.3 1.3-4.3-2.2-6-2.7m12 5.2v-3.3c0-.9-.3-1.6-.8-2 2.7-.3 5.6-1.3 5.6-6a4.7 4.7 0 0 0-1.3-3.3c.1-.3.6-1.6-.1-3.3 0 0-1.1-.4-3.5 1.3a12 12 0 0 0-6.3 0C6.2 3.2 5.1 3.6 5.1 3.6c-.7 1.7-.2 3-.1 3.3a4.7 4.7 0 0 0-1.3 3.3c0 4.7 2.8 5.7 5.5 6-.4.4-.8 1.1-.8 2v3.3"
+        />
+      </symbol>
+      <symbol id="i-close" viewBox="0 0 24 24">
+        <path d="m6 6 12 12M6 18 18 6" />
+      </symbol>
+      <symbol id="i-wave" viewBox="0 0 24 24">
+        <path d="M3 10v4m4-7v10m5-14v18m5-14v10m4-7v4" />
+      </symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24">
+        <path
+          d="m12 2 2.6 7.4L22 12l-7.4 2.6L12 22l-2.6-7.4L2 12l7.4-2.6L12 2Z"
+        />
+      </symbol>
+      <symbol id="i-play" viewBox="0 0 24 24">
+        <path d="m9 5 11 7-11 7V5Z" />
+      </symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24">
+        <path d="M9 5v14m6-14v14" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4L19 6" />
+      </symbol>
+    </svg>
+
+    <div class="site-shell">
+      <header class="header">
+        <a class="wordmark" href="/" aria-label="Talium 工具箱首页"
+          ><img src="/favicon.svg" alt="" width="35" height="35" /><span
+            >talium<span class="wordmark-dot">.</span></span
+          ></a
+        >
+        <nav class="main-nav" aria-label="主导航">
+          <a class="nav-link active" href="#tools"
+            >工具箱<span class="nav-dot"></span
+          ></a>
+          <button class="nav-link" type="button" data-about-open>
+            关于这里
+          </button>
+        </nav>
+        <div class="header-actions">
+          <button
+            class="icon-button search-trigger"
+            type="button"
+            aria-label="搜索工具"
+            title="搜索工具（Ctrl / ⌘ K）"
+          >
+            <svg class="icon"><use href="#i-search" /></svg><kbd>⌘ K</kbd>
+          </button>
+          <span class="action-divider" aria-hidden="true"></span>
+          <button
+            class="icon-button theme-toggle"
+            type="button"
+            aria-label="切换到深色模式"
+            title="切换到深色模式"
+          >
+            <svg class="icon theme-sun"><use href="#i-sun" /></svg
+            ><svg class="icon theme-moon"><use href="#i-moon" /></svg>
+          </button>
+          <a
+            class="icon-button github-header"
+            href="https://github.com/Zydr114/OnlineToolsMenu"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="在 GitHub 查看源码（新标签页）"
+            ><svg class="icon"><use href="#i-github" /></svg
+          ></a>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <div class="eyebrow enter" style="--order: 0">
+              <span class="status-dot"></span> 一处灵感的栖息地
+              <span class="eyebrow-line"></span> YOUR DIGITAL WORKSHOP
+            </div>
+            <h1 id="hero-title" class="enter" style="--order: 1">
+              小工具，<br /><span class="hero-second"
+                >大有<span class="word-highlight"
+                  >可为<svg viewBox="0 0 200 20" aria-hidden="true">
+                    <path d="M3 13Q87 0 194 8M14 17Q110 6 181 13" /></svg></span
+                ><span class="hero-period">。</span></span
+              >
+            </h1>
+            <p class="hero-description enter" style="--order: 2">
+              把复杂留给工具，把专注留给创作。<br />一些认真打磨的小东西，随时为你所用。
+            </p>
+            <div class="hero-bottom enter" style="--order: 3">
+              <a href="#tools" class="button button-primary explore-button"
+                ><span>探索工具</span
+                ><svg class="icon"><use href="#i-down" /></svg></a
+              ><span class="hero-note"
+                >轻量、专注，打开即用。<span
+                  >MADE FOR YOUR NEXT IDEA</span
+                ></span
+              >
+            </div>
+          </div>
+
+          <div class="hero-art enter" style="--order: 2">
+            <div class="art-coordinate art-coordinate-top">
+              <span>FIG. 001</span><span>IDEAS IN BLOOM</span>
+            </div>
+            <div class="orbit orbit-outer" aria-hidden="true"></div>
+            <div class="orbit orbit-inner" aria-hidden="true"></div>
+            <div class="orbit-satellite satellite-one" aria-hidden="true"></div>
+            <div class="orbit-satellite satellite-two" aria-hidden="true"></div>
+            <button
+              class="bloom-button"
+              type="button"
+              aria-label="绽放灵感花朵"
+            >
+              <div class="bloom-tilt">
+                <svg
+                  class="bloom"
+                  viewBox="0 0 600 600"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <defs>
+                    <linearGradient
+                      id="petal"
+                      x1="231"
+                      y1="107"
+                      x2="341"
+                      y2="310"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stop-color="#e8f4c8" />
+                      <stop offset=".24" stop-color="#c6dfa5" />
+                      <stop offset=".55" stop-color="#8bad75" />
+                      <stop offset=".82" stop-color="#436751" />
+                      <stop offset="1" stop-color="#1d3c30" />
+                    </linearGradient>
+                    <linearGradient
+                      id="petal-edge"
+                      x1="250"
+                      y1="112"
+                      x2="320"
+                      y2="300"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stop-color="#f6ffdf" stop-opacity=".85" />
+                      <stop
+                        offset=".6"
+                        stop-color="#bad69b"
+                        stop-opacity=".2"
+                      />
+                      <stop offset="1" stop-color="#264e35" stop-opacity=".6" />
+                    </linearGradient>
+                    <radialGradient id="bloom-core">
+                      <stop stop-color="#1b382c" />
+                      <stop offset="1" stop-color="#36563a" />
+                    </radialGradient>
+                    <filter
+                      id="bloom-shadow"
+                      x="-40%"
+                      y="-40%"
+                      width="180%"
+                      height="190%"
+                    >
+                      <feDropShadow
+                        dx="0"
+                        dy="18"
+                        stdDeviation="13"
+                        flood-color="#1e3f29"
+                        flood-opacity=".18"
+                      />
+                    </filter>
+                    <path
+                      id="bloom-petal"
+                      d="M300 309C258 301 219 231 222 174C224 127 250 92 277 102C316 116 338 176 331 228C327 265 314 294 300 309Z"
+                    />
+                  </defs>
+                  <g class="bloom-petals" filter="url(#bloom-shadow)"></g>
+                  <circle cx="300" cy="300" r="19" fill="url(#bloom-core)" />
+                  <circle cx="295" cy="294" r="5" fill="#d9eeb2" opacity=".8" />
+                </svg>
+              </div>
+              <span class="bloom-ring" aria-hidden="true"></span>
+            </button>
+            <div class="art-coordinate art-coordinate-bottom">
+              <span><span class="tiny-cross">+</span> 不妨，碰一下灵感</span
+              ><svg class="icon"><use href="#i-spark" /></svg>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-section" id="tools" aria-labelledby="tools-title">
+          <div class="section-heading reveal">
+            <div>
+              <span class="section-eyebrow">THE COLLECTION</span>
+              <h2 id="tools-title">趁手的工具<span class="count">01</span></h2>
+            </div>
+            <p>不多，刚刚好。<span class="small-spark">✳</span></p>
+          </div>
+          <div class="collection-toolbar reveal">
+            <span class="collection-tab"
+              ><span class="status-dot"></span>全部工具 <span>1</span></span
+            ><span class="collection-caption">为每一个想法，找到入口。</span
+            ><button
+              class="collection-search"
+              type="button"
+              aria-label="搜索工具"
+            >
+              <svg class="icon"><use href="#i-search" /></svg
+              ><span>找个工具</span><kbd>/</kbd>
+            </button>
+          </div>
+
+          <article
+            class="tool-card reveal"
+            data-tool-title="MakoLrc Studio"
+            data-tool-keywords="歌词 逐字 逐行 打轴 音乐 音频 编辑器 LRC TTML ASS 罗马音 注音 makolrc mako lrc studio"
+          >
+            <div class="tool-info">
+              <div class="tool-card-top">
+                <span class="tool-category"
+                  ><svg class="icon"><use href="#i-wave" /></svg>
+                  音频与歌词</span
+                ><span class="tool-number">TOOL / 001</span>
+              </div>
+              <div class="tool-logo" aria-hidden="true">
+                <svg viewBox="0 0 48 48">
+                  <path d="M11 29V19m7 17V12m6 29V7m6 27V14m7 14v-8" /></svg
+                ><span class="logo-spark">✦</span>
+              </div>
+              <h3>
+                MakoLrc <span>Studio</span><span class="title-dot"></span>
+              </h3>
+              <p class="tool-tagline">让每一个字，都恰逢其时。</p>
+              <p class="tool-description">
+                在浏览器里，给歌词逐行、逐字打轴。<br
+                  class="desktop-break"
+                />从第一句灵感，到与旋律严丝合缝的最后一字。
+              </p>
+              <div class="tool-tags">
+                <span>逐字歌词</span><span>多格式导出</span
+                ><span>本地处理</span>
+              </div>
+              <a
+                class="launch-button"
+                href="https://tool.talium.site/MakoLrcStudio/"
+                ><span>打开工作室</span
+                ><span class="launch-arrow"
+                  ><svg class="icon"><use href="#i-arrow" /></svg></span
+              ></a>
+            </div>
+
+            <div
+              class="tool-visual"
+              role="img"
+              aria-label="歌词时间轴视觉意象，非实际编辑器"
+            >
+              <div class="visual-grid" aria-hidden="true"></div>
+              <div class="preview-window" aria-hidden="true">
+                <div class="preview-top">
+                  <span class="preview-dots"><i></i><i></i><i></i></span
+                  ><span>mako / a moment in sync</span
+                  ><svg class="icon"><use href="#i-wave" /></svg>
+                </div>
+                <div class="preview-body">
+                  <span class="preview-label"
+                    ><span class="status-dot"></span> 每个瞬间，恰好同步</span
+                  >
+                  <div class="lyric-line lyric-line-previous">让时间慢一点</div>
+                  <div class="lyric-line lyric-line-current">
+                    <span>让</span><span>灵</span><span>感</span><span>被</span
+                    ><span>听</span><span>见</span><i></i>
+                  </div>
+                  <div class="lyric-line lyric-line-next">
+                    在字里行间，遇见旋律
+                  </div>
+                </div>
+                <div class="timeline">
+                  <div class="timeline-ruler">
+                    <span>00:12</span><span>00:14</span><span>00:16</span
+                    ><span>00:18</span>
+                  </div>
+                  <div class="waveform" aria-hidden="true"></div>
+                  <div class="timeline-playhead" aria-hidden="true">
+                    <span></span>
+                  </div>
+                  <div class="timeline-words" aria-hidden="true">
+                    <span>让</span><span>灵</span><span>感</span><span>被</span
+                    ><span>听</span><span>见</span>
+                  </div>
+                </div>
+                <div class="preview-bottom">
+                  <span
+                    ><svg class="icon"><use href="#i-play" /></svg>
+                    <span class="preview-time">00:14.28</span
+                    ><span class="preview-duration">/ 00:32.00</span></span
+                  ><span class="preview-formats"
+                    >LRC <i></i> TTML <i></i> ASS</span
+                  >
+                </div>
+              </div>
+              <span class="visual-caption" aria-hidden="true"
+                ><span class="caption-line"></span> A LITTLE PRECISION. A LOT OF
+                EXPRESSION.</span
+              ><span class="demo-label">界面意象 · 非操作演示</span>
+            </div>
+          </article>
+
+          <div class="growing-note reveal">
+            <span class="growing-icon" aria-hidden="true"
+              ><svg class="icon"><use href="#i-spark" /></svg
+            ></span>
+            <p>
+              工具箱还在慢慢生长。<span
+                >下一个好用的小东西，也许就在路上。</span
+              >
+            </p>
+            <span class="growing-end" aria-hidden="true"
+              >TO BE CONTINUED <svg class="icon"><use href="#i-arrow" /></svg
+            ></span>
+          </div>
+        </section>
+
+        <section class="closing reveal" aria-label="创作寄语">
+          <div class="closing-orbit" aria-hidden="true">✳</div>
+          <p>少一点繁琐，<span>多一点创造。</span></p>
+          <span class="closing-label">SMALL TOOLS. OPEN POSSIBILITIES.</span
+          ><a href="#hero-title" class="back-top" aria-label="回到顶部"
+            ><svg class="icon"><use href="#i-down" /></svg
+          ></a>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-brand">
+          <span>talium.</span><span>独立构建，保持好奇。</span>
+        </div>
+        <div class="footer-right">
+          <button class="motion-toggle" type="button" aria-pressed="true">
+            <span class="motion-indicator"><i></i><i></i><i></i></span
+            ><span class="motion-label">动效已开启</span></button
+          ><span class="footer-divider">/</span
+          ><a
+            href="https://github.com/Zydr114/OnlineToolsMenu"
+            target="_blank"
+            rel="noopener noreferrer"
+            >开源于 GitHub <svg class="icon"><use href="#i-arrow" /></svg></a
+          ><span class="copyright">© <span id="year">2026</span> Talium</span>
+        </div>
+      </footer>
+    </div>
+
+    <dialog class="search-dialog" aria-labelledby="search-title">
+      <div class="search-field">
+        <svg class="icon"><use href="#i-search" /></svg
+        ><label class="sr-only" id="search-title" for="tool-search"
+          >搜索工具</label
+        ><input
+          id="tool-search"
+          type="search"
+          placeholder="寻找你的下一个趁手工具…"
+          autocomplete="off"
+        /><button class="dialog-close" type="button" aria-label="关闭搜索">
+          <kbd>Esc</kbd>
+        </button>
+      </div>
+      <div class="search-content">
+        <p class="search-section-label">
+          工具箱 <span id="result-count">1 个工具</span>
+        </p>
+        <a class="search-result" href="https://tool.talium.site/MakoLrcStudio/"
+          ><span class="result-icon"
+            ><svg class="icon"><use href="#i-wave" /></svg></span
+          ><span
+            ><strong>MakoLrc Studio</strong
+            ><small>歌词编辑 · 逐字打轴 · 本地处理</small></span
+          ><svg class="icon result-arrow"><use href="#i-arrow" /></svg
+        ></a>
+        <div class="search-empty" hidden>
+          <svg class="icon"><use href="#i-search" /></svg>
+          <p>还没有找到这个工具</p>
+          <span>试试「歌词」「打轴」或「Mako」。</span>
+        </div>
+        <p
+          class="sr-only search-announcement"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </div>
+      <div class="search-footer">
+        <span><kbd>↓</kbd> 选择 <kbd>↵</kbd> 打开</span
+        ><span>一点搜索，一点灵感。</span>
+      </div>
+    </dialog>
+
+    <dialog class="about-dialog" aria-labelledby="about-title">
+      <button
+        class="icon-button dialog-close"
+        type="button"
+        aria-label="关闭关于"
+      >
+        <svg class="icon"><use href="#i-close" /></svg></button
+      ><img src="/favicon.svg" alt="" width="52" height="52" /><span
+        class="section-eyebrow"
+        >A NOTE FROM THE WORKSHOP</span
+      >
+      <h2 id="about-title">一些小工具，<br />一点创造力。</h2>
+      <p>
+        这里是 Talium
+        的个人在线工具箱。把自己需要、也希望对你有用的小工具，放在一个安静的地方。
+      </p>
+      <p>
+        目前收录了 MakoLrc
+        Studio：一个在浏览器中制作逐字歌词的工作室。音频和歌词在本地处理，从整理文本到导出作品，让专注回到创作本身。
+      </p>
+      <a
+        class="button button-primary"
+        href="https://github.com/Zydr114/OnlineToolsMenu"
+        target="_blank"
+        rel="noopener noreferrer"
+        >看看这里的源码 <svg class="icon"><use href="#i-arrow" /></svg></a
+      ><span class="about-signature"
+        >保持好奇，慢慢打磨。<span>— Talium</span></span
+      >
+    </dialog>
+    <div class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
