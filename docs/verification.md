@@ -92,3 +92,13 @@ a53974e284212a9638457b72ff2adde9670c0e4ed41c59a7d12174d9033f53c2
 - 手工检查 1440px 深浅主题、两种结构及 390px 深色手机截图；无 JavaScript 时提供静态结形轮廓，并复验三浏览器入口和原生导航。
 - 构建体积：HTML 13.64 kB、CSS 23.14 kB、JS 10.54 kB。
 - 截图：`artifacts/knot-final-dark-1440.png`、`artifacts/knot-final-eight-dark-1440.png`、`artifacts/knot-final-light-1440.png`、`artifacts/knot-final-dark-390.png`。
+
+### 空间结版本线上验收
+
+- 部署源码：`988a21ef5e7eb971c5ab0bb699fbe56216063aba`；2026-10-16 13:44:13（Asia/Shanghai）激活。
+- 线上 Chromium 全部 18 项回归通过（5.0 秒），包括红蓝像素比例、两种结形的边界、减少动效和拖动行为。
+- 公开 CSS/JS 与本地生产构建逐字节一致；MakoLrc Studio 入口 HTML 校验值与升级前相同。
+- 当前版本：`/var/www/tool.talium.site/menu/releases/20261016T054413845738Z-988a21ef5e7e`。
+- 配置备份：`/var/backups/talium-menu/20261016T054413845738Z.Caddyfile`；保留上一版用于回滚。
+
+此验收记录提交仅更新文档。
